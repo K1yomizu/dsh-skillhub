@@ -1,5 +1,5 @@
 /**
- * Host half of `dsh-skill-market`.
+ * Host half of `dsh-skillhub`.
  *
  * Responsibilities:
  *   1. serve the panel's same-origin JSON API on the `webServer` service;
@@ -31,7 +31,7 @@ import { API_PREFIX, handleApiRequest } from './api.ts'
 import { createSearchTool, SEARCH_TOOL_NAME } from './tool.ts'
 
 /** Plugin id inside the composition. */
-export const name = 'dsh-skill-market'
+export const name = 'dsh-skillhub'
 
 /**
  * Only `webServer` gates activation. `tools` is attached lazily so a profile
@@ -39,7 +39,7 @@ export const name = 'dsh-skill-market'
  */
 export const inject = ['webServer']
 
-/** Plugin configuration (patch-layer overridable by row id `skill-market`). */
+/** Plugin configuration (patch-layer overridable by row id `skill-hub`). */
 export interface Config {
   /** Upstream request timeout in milliseconds. */
   timeoutMs?: number
@@ -86,13 +86,13 @@ export function apply(ctx: Context, config: Config = {}): void {
     handler: (req, res) => { void handleApiRequest(deps, req, res) },
   }
 
-  ctx.effect(() => ctx.webServer.register(route), 'skill-market: panel API route')
+  ctx.effect(() => ctx.webServer.register(route), 'skill-hub: panel API route')
 
   if (config.enableModelTool !== false) {
     // Deferred injection: the tool row appears only when `tools` is present,
     // and disappears with this plugin's fiber either way.
     ctx.inject(['tools'], (toolCtx) => {
-      toolCtx.effect(() => toolCtx.tools.register(createSearchTool(nodeFetch)), `skill-market: ${SEARCH_TOOL_NAME}`)
+      toolCtx.effect(() => toolCtx.tools.register(createSearchTool(nodeFetch)), `skill-hub: ${SEARCH_TOOL_NAME}`)
     })
   }
 }

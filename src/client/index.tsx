@@ -1,5 +1,5 @@
 /**
- * Browser half of `dsh-skill-market`.
+ * Browser half of `dsh-skillhub`.
  *
  * Three registrations, all effect-scoped so plugin unload removes them cleanly:
  *
@@ -27,16 +27,16 @@ import { PANEL_CSS } from './styles.ts'
 import { SkillMarketStore } from './store.ts'
 
 /** Plugin id inside the client composition; must equal the package name. */
-export const name = 'dsh-skill-market'
+export const name = 'dsh-skillhub'
 
 /** The slots registry is the only service this half needs. */
 export const inject = ['slots']
 
 /** Panel entry id in `sidebar.footer.action`. */
-const ENTRY_ID = 'skill-market'
+const ENTRY_ID = 'skill-hub'
 
 /** Panel entry id in `shell.overlay`. */
-const OVERLAY_ID = 'skill-market-panel'
+const OVERLAY_ID = 'skill-hub-panel'
 
 /** Footer entry order. Negative keeps it clear of the host's own popover row. */
 const ENTRY_ORDER = -40
@@ -55,7 +55,7 @@ export function apply(ctx: Context): void {
     tag.textContent = PANEL_CSS
     document.head.appendChild(tag)
     return () => { tag.remove() }
-  }, 'skill-market: panel styles')
+  }, 'skill-hub: panel styles')
 
   // Built once so the injected `actions` object keeps a stable identity; the
   // overlay's Esc-binding effect depends on it.

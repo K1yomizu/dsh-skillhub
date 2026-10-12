@@ -87,7 +87,7 @@ function createStubWebServer() {
  * @param {Record<string, string>} [headers] - extra headers, for the guard tests.
  */
 async function post(port, path, body, headers = {}) {
-  const response = await fetch(`http://127.0.0.1:${port}/plugins/dsh-skill-market/api${path}`, {
+  const response = await fetch(`http://127.0.0.1:${port}/plugins/dsh-skillhub/api${path}`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', ...headers },
     body: JSON.stringify(body ?? {}),
@@ -109,7 +109,7 @@ ctx.provide('webServer', web.service)
 plugin.apply(ctx, { timeoutMs: 20_000 })
 
 // A prefix route must have been mounted, and nothing else.
-check(plugin.name, 'dsh-skill-market', 'plugin name')
+check(plugin.name, 'dsh-skillhub', 'plugin name')
 check(JSON.stringify(plugin.inject), JSON.stringify(['webServer']), 'plugin injects only webServer')
 
 const port = await web.listen()
@@ -158,10 +158,10 @@ check((await post(port, '/unknown', {})).body.kind, 'not-found', 'unknown endpoi
 const origin = await post(port, '/search', {}, { origin: 'https://evil.example' })
 check(origin.body.kind, 'forbidden-origin', 'foreign Origin rejected')
 
-const method = await fetch(`http://127.0.0.1:${port}/plugins/dsh-skill-market/api/search`)
+const method = await fetch(`http://127.0.0.1:${port}/plugins/dsh-skillhub/api/search`)
 check((await method.json()).kind, 'method-not-allowed', 'GET rejected')
 
-const mediaType = await fetch(`http://127.0.0.1:${port}/plugins/dsh-skill-market/api/search`, {
+const mediaType = await fetch(`http://127.0.0.1:${port}/plugins/dsh-skillhub/api/search`, {
   method: 'POST',
   headers: { 'content-type': 'text/plain' },
   body: '{}',

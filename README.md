@@ -1,4 +1,4 @@
-# dsh-skill-market
+# dsh-skillhub
 
 A DeepSeek Harness (DSH) plugin that puts a **Skill Market** in the Web UI sidebar:
 search and browse SkillHub, install skills into user-level or project-level skill
@@ -14,6 +14,12 @@ registry that is not GitHub. It renders the registry's own records; the skills i
 lists under *Installed* are the real files in DSH's four skill roots, several of
 which it cannot write to. The comparison is spelled out in
 [DEVNOTES §5](./DEVNOTES.md#5-design-decisions-worth-stating).
+
+> **On the name.** The package is `dsh-skillhub`, after the registry it talks to.
+> The panel it renders is still labelled *Skill Market* / 技能市场, because that
+> is what the surface *is* — a marketplace UI. Package identity and product label
+> are named for different things on purpose; the composition row id is
+> `skill-hub`.
 
 ---
 
@@ -46,18 +52,22 @@ and a link back to the SkillHub page.
 
 ## Install
 
+From GitHub:
+
 ```bash
-dsh plugin --profile <profile> add dsh-skill-market
+dsh plugin --profile <profile> add github:K1yomizu/dsh-skillhub
 ```
 
-Then restart the profile. The installer links the package into
-`$DSH_HOME/profiles/<profile>` and appends it to `dsh.profile.bundles`, which is
-what makes its `cordis.patch.yml` layer get composed into the boot tree.
+`dsh plugin` forwards its arguments straight to pnpm, so this is an ordinary
+`github:` specifier. It works **because `lib/` is committed**: pnpm builds a git
+dependency only when it declares a `prepare` script, and this package deliberately
+has none, so the prebuilt artifacts in the repo are what gets installed. Check out
+the tag matching the DSH release you are running.
 
-### Installing from a local checkout
+From a local checkout:
 
 ```bash
-dsh plugin --profile <profile> add "file:/abs/path/to/dsh-skill-market"
+dsh plugin --profile <profile> add "file:/abs/path/to/dsh-skillhub"
 ```
 
 Prefer the explicit `file:` prefix over a bare path: a bare path makes pnpm
@@ -66,6 +76,10 @@ entry to `package.json` without ever creating `node_modules/<pkg>`, so the
 installer's manifest resolution step fails afterwards. This is a pnpm bug, not a
 plugin one — see [DEVNOTES](./DEVNOTES.md#pnpm-link-protocol). Always run
 `npm run build` first so `lib/` exists; `lib/` is what ships.
+
+Either way the installer links the package into `$DSH_HOME/profiles/<profile>` and
+appends it to `dsh.profile.bundles`, which is what makes its `cordis.patch.yml`
+layer get composed into the boot tree. Restart the profile afterwards.
 
 ### The reserved `desktop` profile
 
@@ -82,7 +96,7 @@ rollback snapshot, and the bundle reconcile all still run:
 
 ```bash
 DSH_INSTALL=/path/to/node_modules/@deepseek-ai/dsh \
-  node scripts/desktop-profile.mjs add "file:/abs/path/to/dsh-skill-market"
+  node scripts/desktop-profile.mjs add "file:/abs/path/to/dsh-skillhub"
 ```
 
 Quit the desktop application first — the installer takes a lock on the profile and
@@ -144,6 +158,23 @@ For the same reason it is file-by-file rather than a zip download from
 `/download`: per-file `sha256` from the manifest is the only integrity signal
 SkillHub offers, and taking it also avoids a zip dependency.
 
+**And the skill is read back before the install is called a success.** Integrity
+is not loadability: SkillHub does not validate `name` grammar, so a skill can
+download perfectly, verify perfectly, and still be dropped by DSH on the next
+scan — with nothing but a `logger.warn` nobody reads. After the rename lands,
+the installed `SKILL.md` is parsed again with DSH's own rules and any violation
+is returned in the install result and shown as a warning in the panel:
+
+```
+已安装「Self-Improving + Proactive Agent」，但 DSH 会忽略它：
+name「Self-Improving + Proactive Agent」不符合 DSH 语法（只允许小写字母、数字、连字符）
+```
+
+Roughly one in ten of SkillHub's most-downloaded skills trips this. The author's
+frontmatter is never rewritten — the plugin reports, it does not edit someone
+else's metadata. The rules and their provenance are in
+[DEVNOTES §6.7](./DEVNOTES.md#67-the-post-install-read-back).
+
 ### 3. Installed-skill management
 
 The **Installed** tab lists every skill across all four roots with:
@@ -175,13 +206,13 @@ says so explicitly instead of letting the model imply otherwise.
 
 ## Configuration
 
-The plugin row is `skill-market` in its own `cordis.patch.yml`, so it can be
+The plugin row is `skill-hub` in its own `cordis.patch.yml`, so it can be
 overridden by id from the profile's patch layer:
 
 ```yaml
 # $DSH_HOME/profiles/web/cordis.patch.yml
-- id: skill-market
-  name: dsh-skill-market
+- id: skill-hub
+  name: dsh-skillhub
   config:
     defaultLevel: project
     pageSize: 50
@@ -242,7 +273,7 @@ package.json
 ### Panel API
 
 Same-origin `POST` + `application/json` under
-`/plugins/dsh-skill-market/api`, served on the composition's `webServer`
+`/plugins/dsh-skillhub/api`, served on the composition's `webServer`
 (`WebRoute { kind: 'prefix' }`). A plugin-owned route prefix is the supported
 channel for out-of-tree plugins — the Remote surface is a closed set that cannot
 be extended from outside.
@@ -263,9 +294,11 @@ the boundary — failures come back as `{ ok: false, error, kind? }`.
 npm install --legacy-peer-deps   # peer conflicts in the published tree
 npm run typecheck                # tsc --noEmit
 npm run build                    # esbuild -> lib/index.js + lib/client.js
-npm run verify                   # typecheck + build (hermetic)
+npm test                         # contract rules, 28 cases (hermetic)
+npm run verify                   # typecheck + test + build (hermetic)
+npm run test:readback            # install a real skill, assert the read-back (needs network)
 npm run smoke                    # Host half against the live SkillHub API
-npm run verify:live              # verify + smoke
+npm run verify:live              # verify + readback + smoke
 npm run capture -- --url "…"     # photograph the panel in a running profile
 npm run audit                    # sample SkillHub against DSH's frontmatter rules
 ```
@@ -287,6 +320,11 @@ the registry's own fields (`version`, `author`, `license`, `slug`, `displayName`
 `xiaping_*`) and treats the camelCase invocation aliases as a hard error. When the
 invocation keys are absent DSH defaults both to on, which is why the panel gives
 you switches for them.
+
+That is the gap the post-install read-back closes: the three rows above install
+successfully and then do not exist as far as the model is concerned. `npm test`
+pins the rules against 28 cases and `npm run test:readback` proves they fire on a
+real install of a real failing skill.
 
 `npm run smoke` loads the built `lib/index.js` into a real Cordis context, mounts
 its route on a stand-in `webServer`, and drives the routes over loopback against
@@ -326,6 +364,7 @@ src/shared/   types.ts    wire contracts (both halves)
 src/host/     index.ts    plugin entry, config schema
               api.ts      same-origin JSON routes
               market.ts   source fallback + download/verify/install pipeline
+              contract.ts post-install read-back against DSH's load rules
               local.ts    skill roots, frontmatter, atomic writes
               tool.ts     dsh_skillhub_search
 src/client/   index.tsx   registration into the two slots
@@ -337,6 +376,8 @@ src/client/   index.tsx   registration into the two slots
               styles.ts   theme-token CSS
               slot-map.d.ts  the two SlotMap entries
 scripts/      build.mjs     dual-artifact build + manifest assertions
+              test-contract.mjs       the read-back rules, 28 cases
+              test-install-readback.mjs  real install, real read-back
               smoke-host.mjs  Host-half integration test
               capture-ui.mjs  browser capture of the rendered panel
               audit-compat.mjs  samples SkillHub against DSH's frontmatter rules

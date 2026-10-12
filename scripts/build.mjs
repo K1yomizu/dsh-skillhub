@@ -1,5 +1,5 @@
 /**
- * Build script for `dsh-skill-market`.
+ * Build script for `dsh-skillhub`.
  *
  * Produces the two artifacts a dual-face DSH bundle needs:
  *
@@ -79,7 +79,7 @@ async function buildHost() {
   })
   const source = await readFile(outfile, 'utf8')
   assert(source.includes('export'), 'host bundle has no ESM exports')
-  assert(source.includes('dsh-skill-market'), 'host bundle does not carry the plugin id')
+  assert(source.includes('dsh-skillhub'), 'host bundle does not carry the plugin id')
   assert(source.includes('dsh_skillhub_search'), 'host bundle does not register the model tool')
   const inputs = Object.keys(result.metafile.inputs).length
   console.log(`[build] host   -> lib/index.js  (${inputs} inputs, ${source.length} bytes)`)
@@ -103,7 +103,7 @@ async function buildClient() {
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     banner: {
       js: [
-        '// Built by dsh-skill-market — do not edit; see scripts/build.mjs.',
+        '// Built by dsh-skillhub — do not edit; see scripts/build.mjs.',
         `window.__ModuleLoader__.load({ id: ${JSON.stringify(PACKAGE_NAME)}, factory: function (require) {`,
         'var module = { exports: {} }; var exports = module.exports;',
       ].join('\n'),
@@ -115,7 +115,7 @@ async function buildClient() {
   // esbuild writes the sourcemap reference after the footer, which would leave
   // a stray comment outside the factory; the artifact ships without one.
   const source = await readFile(outfile, 'utf8')
-  assert(source.startsWith('// Built by dsh-skill-market'), 'client bundle is missing the factory banner')
+  assert(source.startsWith('// Built by dsh-skillhub'), 'client bundle is missing the factory banner')
   assert(source.includes('__ModuleLoader__.load'), 'client bundle does not register with the module loader')
   assert(
     source.includes(`id: ${JSON.stringify(PACKAGE_NAME)}`),

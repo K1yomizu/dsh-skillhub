@@ -32,9 +32,11 @@ import type {
   MarketPage,
   MarketSourceId,
   SearchRequest,
+  SkillContractIssue,
   SourceAttempt,
 } from '../shared/types.ts'
-import { levelRoot, listInstalled, sha256Hex, writeSkill, type IncomingFile } from './local.ts'
+import { checkSkillContract } from './contract.ts'
+import { levelRoot, listInstalled, readSkillFile, sha256Hex, writeSkill, type IncomingFile } from './local.ts'
 
 /** Remote sources in priority order. */
 const REMOTE_SOURCES: readonly { id: MarketSourceId; host: string }[] = [
@@ -215,7 +217,37 @@ export async function installFromMarket(
 
   const files = await downloadAll(deps.fetchImpl, host, request, manifest, signal)
   const result = await writeSkill(root, request.slug, files, true)
-  return { path: result.path, level: request.level, version: manifest.version, fileCount: result.fileCount }
+  return {
+    path: result.path,
+    level: request.level,
+    version: manifest.version,
+    fileCount: result.fileCount,
+    warnings: await readBack(root, request.slug),
+  }
+}
+
+/**
+ * Read the skill back off disk and check it against DSH's load contract.
+ *
+ * Read from disk rather than from the bytes just downloaded on purpose: the
+ * question is what DSH will find when it scans the root, not what we believe we
+ * sent it. Upstream's own `findskills` makes the same read-back mandatory, for
+ * the same reason — an install that writes files but yields an unloadable skill
+ * otherwise reports success.
+ * @param root - root the skill was written to.
+ * @param dir - skill directory name.
+ * @returns the finding, or an empty list when the skill will actually load.
+ */
+async function readBack(root: string, dir: string): Promise<SkillContractIssue[]> {
+  try {
+    const issue = checkSkillContract(await readSkillFile(root, dir))
+    return issue === undefined ? [] : [issue]
+  } catch (error) {
+    return [{
+      code: 'unreadable',
+      message: `could not read the installed skill back: ${errorText(error)}`,
+    }]
+  }
 }
 
 /** Download every manifest file with bounded concurrency and verify hashes. */

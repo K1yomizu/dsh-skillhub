@@ -12,10 +12,33 @@
  * thrash.
  */
 
-import type { MarketCategory, MarketItem, MarketPage, MarketSort, SkillLevel } from '../shared/types.ts'
+import type {
+  MarketCategory,
+  MarketItem,
+  MarketPage,
+  MarketSort,
+  SkillContractIssue,
+  SkillLevel,
+} from '../shared/types.ts'
 import type { SkillDetail } from '../shared/skillhub.ts'
 import type { TranslateFn } from './i18n.ts'
 import * as api from './api.ts'
+
+/**
+ * Turn a read-back finding into a sentence.
+ *
+ * The Host sends a code plus the offending value, not a finished sentence, so
+ * the wording can be localized here. Its English `message` is the fallback for
+ * a code this build does not know — a newer Host talking to an older panel.
+ * @param issue - the finding.
+ * @param t - translate function for the active locale.
+ * @returns the reason to show the user.
+ */
+function describeContractIssue(issue: SkillContractIssue, t: TranslateFn): string {
+  const key = `warn.${issue.code}` as const
+  const text = t(key, { detail: issue.detail ?? '', hint: issue.hint ?? '' })
+  return text === key ? issue.message : text
+}
 
 /** Panel tab. */
 export type PanelTab = 'market' | 'installed'
@@ -71,7 +94,7 @@ export interface DetailState {
 
 /** Transient banner. */
 export interface Notice {
-  kind: 'ok' | 'error'
+  kind: 'ok' | 'warn' | 'error'
   text: string
 }
 
@@ -287,11 +310,21 @@ export class SkillMarketStore {
           ? this.snapshot.market.installedKeys
           : [...this.snapshot.market.installedKeys, key],
       })
-      this.notify('ok', t('notice.installed', {
-        name: item.name,
-        level: t(level === 'user' ? 'installed.level.user' : 'installed.level.project'),
-        count: result.fileCount,
-      }))
+      // A successful write is not a successful install: DSH drops a SKILL.md
+      // whose frontmatter breaks its load contract, and it drops it silently.
+      const issue = result.warnings[0]
+      if (issue === undefined) {
+        this.notify('ok', t('notice.installed', {
+          name: item.name,
+          level: t(level === 'user' ? 'installed.level.user' : 'installed.level.project'),
+          count: result.fileCount,
+        }))
+      } else {
+        this.notify('warn', t('notice.installedWarn', {
+          name: item.name,
+          reason: describeContractIssue(issue, t),
+        }))
+      }
       await this.loadInstalled()
     } catch (error) {
       this.patchMarket({ installingKey: '' })

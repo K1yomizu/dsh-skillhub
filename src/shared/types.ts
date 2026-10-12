@@ -151,6 +151,49 @@ export interface SetInvocationRequest extends CwdRequest {
   userInvocable?: boolean
 }
 
+/**
+ * Why DSH would silently refuse to load a SKILL.md that was just installed.
+ *
+ * These mirror the failure branches of DSH's own `parseSkillFile`
+ * (`@deepseek-ai/dsh-skill-filesystem/src/index.ts`). Every one of them ends in
+ * a bare `ctx.logger.warn(...)` followed by `return` — the directory stays on
+ * disk and looks installed, but no model ever sees it.
+ */
+export type SkillContractIssueCode =
+  /** No opening `---`, or a block that is never closed. */
+  | 'missing-frontmatter'
+  /** `name` and/or `description` absent, empty, or not a string. */
+  | 'missing-name-or-description'
+  /** `name` present but not kebab-case (`^[a-z0-9]+(?:-[a-z0-9]+)*$`). */
+  | 'invalid-name'
+  /** Camel-case invocation keys, which DSH rejects outright rather than aliasing. */
+  | 'legacy-invocation-key'
+  /** An invocation switch whose value `frontmatterBoolean` cannot coerce. */
+  | 'invalid-invocation-boolean'
+  /**
+   * The plugin could not re-read what it just wrote.
+   *
+   * Not one of DSH's own rules — this is the read-back failing to run at all.
+   * Kept as a distinct code so a diagnostic is never mistaken for a verdict
+   * about the skill, and a clean-looking skill is never silently passed.
+   */
+  | 'unreadable'
+
+/** One contract violation, as the post-install read-back reports it. */
+export interface SkillContractIssue {
+  code: SkillContractIssueCode
+  /** The offending value, when the rule is about a single one. */
+  detail?: string
+  /** What to write instead, when the rule has one canonical replacement. */
+  hint?: string
+  /**
+   * English fallback wording, following upstream's own log text. The panel
+   * prefers a localized sentence built from `code` + `detail` + `hint`; this is
+   * only rendered when a code has no translation.
+   */
+  message: string
+}
+
 /** Install outcome, reported with the files actually written. */
 export interface InstallResult {
   path: string
@@ -158,6 +201,14 @@ export interface InstallResult {
   /** Version actually served by the upstream manifest. */
   version: string
   fileCount: number
+  /**
+   * Read-back findings, empty when the skill will actually load.
+   *
+   * An install can succeed and still be unusable, so "wrote 12 files" is not on
+   * its own an honest success signal. Upstream `findskills` treats this
+   * read-back as mandatory for exactly that reason.
+   */
+  warnings: SkillContractIssue[]
 }
 
 /* ------------------------------------------------------------------ */

@@ -100,6 +100,7 @@ export const PANEL_CSS = `
 
 .${P}-notice { margin: 10px 16px 0; padding: 8px 10px; border-radius: var(--dsw-radius-md, 8px); font-size: 12px; border: 0.5px solid transparent; }
 .${P}-notice[data-kind='ok'] { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #2e9e5b) 14%, transparent); border-color: color-mix(in srgb, var(--dsw-alias-state-success-primary, #2e9e5b) 40%, transparent); }
+.${P}-notice[data-kind='warn'] { background: color-mix(in srgb, var(--dsw-alias-state-warning-primary, #c98a1b) 16%, transparent); border-color: color-mix(in srgb, var(--dsw-alias-state-warning-primary, #c98a1b) 45%, transparent); }
 .${P}-notice[data-kind='error'] { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #d94a4a) 14%, transparent); border-color: color-mix(in srgb, var(--dsw-alias-state-error-primary, #d94a4a) 40%, transparent); }
 
 .${P}-toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px 8px; }

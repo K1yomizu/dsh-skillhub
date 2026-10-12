@@ -1,6 +1,6 @@
 # DEVNOTES
 
-Engineering record for `dsh-skill-market`: where every contract came from, what
+Engineering record for `dsh-skillhub`: where every contract came from, what
 the live upstream actually answers, which traps cost time, and what is and is not
 verified.
 
@@ -159,8 +159,8 @@ one-way in that respect — DSH's optional `whenToUse` appears in none of them.
 So the honest summary: **same file format, different contract.** A SkillHub skill
 is a DSH skill about 90% of the time, and the ~10% that are not fail *silently* —
 DSH logs a warning the model never sees, so an installed-but-invisible skill looks
-exactly like one that was never installed. The plugin currently installs the file
-verbatim and reports success, which means it inherits that silence. See §6.5.
+exactly like one that was never installed. The plugin used to inherit that
+silence; it no longer does. See §6.7.
 
 Full per-skill record: [`docs/skillhub-dsh-compat.json`](./docs/skillhub-dsh-compat.json).
 
@@ -300,7 +300,7 @@ correct profile looks like, and what the repaired one now is (one entry).
 
 ### 3.6 Verifying resolution from outside a booted profile
 
-A plain `node -e "import('dsh-skill-market')"` run from the profile directory
+A plain `node -e "import('dsh-skillhub')"` run from the profile directory
 **fails** with `ERR_MODULE_NOT_FOUND: Cannot find package '@deepseek-ai/schemastery'`,
 even when the plugin is installed and the profile is correct. That is expected, not a
 defect: the interception layer is installed only inside a Harness-owned Worker during
@@ -318,7 +318,7 @@ Do not "fix" this by adding the dependency back — see §3.5.
 
 `pnpm 12.5.1` writes a `link:` dependency into `package.json` and the lockfile but
 **never creates `node_modules/<pkg>`**, so DSH's post-install reconcile step fails
-with `cannot resolve profile bundle "dsh-skill-market"`.
+with `cannot resolve profile bundle "dsh-skillhub"`.
 
 Reproduced in an empty scratch directory, so it is not a DSH or plugin issue, and
 narrowed to the protocol: registry dependencies install fine, and `file:` installs
@@ -404,6 +404,15 @@ SkillHub, fall back automatically"), and the namespace slugs the panel shows
 Nothing is scraped and nothing is mirrored locally: `src/shared/skillhub.ts` maps
 their JSON onto our wire types and the panel renders its own rows.
 
+**Package identity is `dsh-skillhub`; the panel label is still Skill Market.** The
+package, the repo, `cordis.patch.yml`'s row id (`skill-hub`), the client module id
+and the route prefix (`/plugins/dsh-skillhub/api`) all follow the registry the
+plugin talks to. The user-facing label stays `技能市场` / *Skill Market*, because
+that is what the surface is — a marketplace UI, whose backed registry happens to
+be called SkillHub. Renaming the label to match would be naming the shop after its
+supplier. The split is deliberate; this paragraph exists so the next reader does
+not read it as an unfinished rename.
+
 **Already-installed entries are DSH's, not ours.** The installed tab reads the same
 four roots DSH reads (`local.ts`), so it shows real files on disk — in the §6.6
 capture that is `~/.dsh/skills/findskills`, rank 400 `user-dsh`, which the plugin
@@ -448,9 +457,13 @@ Environment: Node `22.22.2`, `typescript@7.0.2`, `esbuild@0.28.2`, `pnpm@12.5.1`
 | step | command | result |
 |------|---------|--------|
 | type check | `npx tsc --noEmit` | **0 errors**, exit 0 |
-| host build | `npm run build` | `lib/index.js` — 7 inputs, 39 192 B |
-| client build | `npm run build` | `lib/client.js` — 52 689 B |
+| host build | `npm run build` | `lib/index.js` — 8 inputs, 42 215 B |
+| client build | `npm run build` | `lib/client.js` — 54 828 B |
 | manifest + patch assertions | `npm run build` | passed |
+| contract rules, 28 cases | `npm test` | **28/28 passed** |
+| install read-back, live | `npm run test:readback` | **9/9 passed** — §6.7 |
+
+`npm run verify:live` chains all of the above plus §6.2; exit 0.
 
 ### 6.2 Host half, live
 
@@ -499,9 +512,9 @@ this. It is the standing argument for the smoke test existing.
 | step | command | result |
 |------|---------|--------|
 | install | `dsh plugin --profile web add "file:…"` | linked, exit 0 |
-| bundle registration | `~/.dsh/profiles/web/package.json` | `dsh.profile.bundles` gained `dsh-skill-market` |
-| installed artifact | `~/.dsh/profiles/web/node_modules/dsh-skill-market` | carries the final `lib/` (verified: contains the `writableEnded` fix) plus `README.md`, `DEVNOTES.md`, `LICENSE`, `locale/`, `icon.svg`, `cordis.patch.yml` — i.e. `files[]` ships what it claims |
-| composition | `dsh --profile web --dump-config` | exit 0, 1262 lines, last layer `# == dsh-skill-market` → `- id: skill-market / name: dsh-skill-market` |
+| bundle registration | `~/.dsh/profiles/web/package.json` | `dsh.profile.bundles` gained `dsh-skillhub` |
+| installed artifact | `~/.dsh/profiles/web/node_modules/dsh-skillhub` | carries the final `lib/` (verified: contains the `writableEnded` fix) plus `README.md`, `DEVNOTES.md`, `LICENSE`, `locale/`, `icon.svg`, `cordis.patch.yml` — i.e. `files[]` ships what it claims |
+| composition | `dsh --profile web --dump-config` | exit 0, 1262 lines, last layer `# == dsh-skillhub` → `- id: skill-hub / name: dsh-skillhub` |
 
 The `--dump-config` result is the end-to-end proof of the packaging contract: the
 plugin was discovered as a bundle, its `dsh.bundle.patch` was found and loaded, and
@@ -525,12 +538,12 @@ the profile an actual user runs; the `web` profile above was only ever a test be
 | step | command | result |
 |------|---------|--------|
 | refusal | `dsh plugin --profile desktop add …` | exit 1 — `profile "desktop" is managed exclusively by the Electron application` |
-| sanctioned path | `node scripts/desktop-profile.mjs add "file:…"` | exit 0, `+ dsh-skill-market`, 734 ms |
+| sanctioned path | `node scripts/desktop-profile.mjs add "file:…"` | exit 0, `+ dsh-skillhub`, 734 ms |
 | first install (before §3.5 was fixed) | — | pnpm added **15** packages: the plugin plus 12 shadowing `@deepseek-ai/*` copies and their transitive deps |
-| repair | `… remove dsh-skill-market` then `… add "file:…"` | `Packages: -15` then `Packages: +1` |
-| final profile | `~/.dsh/profiles/desktop/node_modules` | **one** entry, `dsh-skill-market` — matching "holds only profile-installed bundles" |
-| bundle registration | `~/.dsh/profiles/desktop/package.json` | `bundles` is now `[…, dsh-experimental-schedule-bundle, dsh-skill-market]` |
-| composition | `node scripts/dump-desktop.mjs` | exit 0, **1294** lines, last layer `# == dsh-skill-market` → `- id: skill-market / name: dsh-skill-market` |
+| repair | `… remove dsh-skillhub` then `… add "file:…"` | `Packages: -15` then `Packages: +1` |
+| final profile | `~/.dsh/profiles/desktop/node_modules` | **one** entry, `dsh-skillhub` — matching "holds only profile-installed bundles" |
+| bundle registration | `~/.dsh/profiles/desktop/package.json` | `bundles` is now `[…, dsh-experimental-schedule-bundle, dsh-skillhub]` |
+| composition | `node scripts/dump-desktop.mjs` | exit 0, **1294** lines, last layer `# == dsh-skillhub` → `- id: skill-hub / name: dsh-skillhub` |
 | user layer intact | same dump | the profile's own `cordis.patch.yml` overrides (`agent-default-model` → `deepseek-flash`, `ui-settings-account`, `ui-chat`, `ui-settings`) all still appear |
 
 The composition check cannot go through `dsh --dump-config`: `rejectElectronProfile`
@@ -538,7 +551,7 @@ guards the boot action unconditionally, and `manageDesktopProfile` only unbinds 
 `plugin` subcommand. The composer itself (`runDumpConfig`) takes no such stance, which
 is what `scripts/dump-desktop.mjs` calls. Running it from an installation also proves
 the two-anchor resolution order — in-box bundles resolve from the installation
-(`INSTALL_ANCHOR`), `dsh-skill-market` from the profile.
+(`INSTALL_ANCHOR`), `dsh-skillhub` from the profile.
 
 A backup of the profile's original `package.json`, `cordis.patch.yml`, `cordis.yml`
 and `pnpm-workspace.yaml` was taken first and is at
@@ -549,16 +562,6 @@ and `pnpm-workspace.yaml` was taken first and is at
 - **The model tool in a real conversation.** Its registration is type-checked
   against `defineTool` and its parameter schema follows the official example, but
   it has not been called by a model.
-- **Installed skills are not re-validated the way DSH will read them.** This is a
-  known gap, not an unknown: §2 measures that ~10% of registry skills carry a
-  `name` DSH refuses, and `installFromMarket` writes the frontmatter verbatim and
-  reports success regardless. The file lands, the directory is correct, and DSH
-  then drops the skill with a warning the model never sees. DSH's own bundled
-  `findskills` treats a read-back check as mandatory for this exact reason. The
-  fix is a post-write parse of the landed `SKILL.md` against the same rules
-  `audit-compat.mjs` applies, surfaced as a warning in the install result — not
-  a rewrite of the author's frontmatter, which would be the plugin editing
-  someone else's metadata.
 - **Icon rendering constraints** (≤ 256 KiB, accepted formats) were followed but
   not validated by the DSH UI.
 - **The panel inside the packaged desktop application.** §6.6 exercises the same
@@ -595,7 +598,7 @@ What the run establishes, beyond the pixels:
 | the client bundle loads through the page's own loader | `.smk-entry` exists in the DOM; no `Runtime.exceptionThrown` during boot |
 | the sidebar slot composes as a contribution, not a replacement | the entry sits in the footer beside 插件 and 设置, with the host's own rows intact |
 | the overlay slot is click-through | the shell behind the panel stays visible and the app is not dimmed by a full-bleed surface |
-| the Host route answers a real browser | the market tab reports **共 191990 个技能** through `/plugins/dsh-skill-market/api/search` |
+| the Host route answers a real browser | the market tab reports **共 191990 个技能** through `/plugins/dsh-skillhub/api/search` |
 | the source chip reports the source that served it | the chip reads **SkillHub 主源**, matching the §2 probe record |
 | the frontmatter parser reads real skills | the installed tab resolves the workspace's `findskills` SKILL.md and flags its root 内置/只读 |
 | SKILL.md is stripped, not shown raw | the detail view opens with `# 编程专家.Skill — …`; no `---` frontmatter block above it |
@@ -606,6 +609,81 @@ this machine boots far enough to serve HTTP"* is now false — the npm tree is
 repairable, and §4.2 records the 19 packages that repair it. And §6.3's profile
 install is no longer only a configuration-tree claim: the same plugin that was
 verified as a composed tree is the one that rendered here.
+
+### 6.7 The post-install read-back
+
+The gap §6.5 used to carry — *"installed skills are not re-validated the way DSH
+will read them"* — is closed. `installFromMarket` now re-parses the landed
+`SKILL.md` with DSH's own rules before returning, and reports any violation in
+`InstallResult.warnings`; the panel renders it as a warning notice instead of a
+success one.
+
+**Rule provenance.** `src/host/contract.ts` transcribes the failure branches of
+`parseSkillFile` in `@deepseek-ai/dsh-skill-filesystem/lib/index.js`, in the same
+order, because upstream short-circuits — the first failing rule is the one that
+explains the drop:
+
+| # | rule | upstream site |
+|---|------|---------------|
+| 1 | block opens with `---` and is closed | *missing YAML frontmatter* |
+| 2 | `name` and `description` both non-empty strings | *frontmatter requires name and description* |
+| 3 | `name` matches `/^[a-z0-9]+(?:-[a-z0-9]+)*$/` | *invalid skill name* |
+| 4 | no `disableModelInvocation` / `modelInvocable` / `userInvocable` | `rejectLegacyInvocationKey` |
+| 5 | invocation switches coerce as booleans | `frontmatterBoolean` throws `TypeError` |
+
+Rule 4 deserves the emphasis it gets: the camel-case keys are **rejected
+outright**, not aliased. A skill written against an older convention is dropped,
+so a read-back that merely normalised the names would hide a real failure.
+
+**Evidence.**
+
+| step | command | result |
+|------|---------|--------|
+| rule transcription, 28 cases | `npm test` | **28/28 passed** |
+| real install, failing + passing fixture | `npm run test:readback` | **9/9 passed** |
+
+The unit cases include the three named failures from §2's audit verbatim —
+`Mysteel_PriceSearch`, `全国电子印章互认平台`, `Self-Improving + Proactive Agent`
+— plus the ordering cases that prove rule 3 is blamed before rule 4 when a file
+breaks both.
+
+The read-back test is the one that matters, because it drives the real pipeline
+against the live registry:
+
+```
+-- a skill DSH will drop --
+     path <tmp>/skills/self-improving
+     v1.2.16, 15 files
+ok   read-back produced exactly one warning
+ok   warning blamed on the name grammar
+ok   warning carries the offending name
+     skill file ignored: invalid skill name "Self-Improving + Proactive Agent"
+ok   on-disk SKILL.md carries the name the warning names
+
+-- a skill DSH will load --
+     path <tmp>/skills/anti-fraud
+     v1.0.11, 19 files
+ok   clean skill produced no warnings
+```
+
+Both fixtures install into a throwaway tree (`DSH_AGENTS_HOME` pointed at a temp
+directory) so the pass never writes into the real `~/.agents/skills`. The second
+half of that assertion is the one a naive implementation would miss: a validator
+that always fired would satisfy the first fixture and fail the second.
+
+**What is still not checked: malformed YAML.** Upstream parses the block with a
+real YAML parser, so it can also reject a block that is syntactically invalid —
+`description: a: b`, an unclosed flow sequence. The Host half bundles with zero
+third-party runtime dependencies and reads frontmatter by hand, so it cannot
+make that judgement and reports such a file as clean. This is a real residual
+gap, left open deliberately rather than papered over: the alternative is a YAML
+parser in the Host bundle, which this plugin's packaging rules rule out.
+
+**Two deliberate non-behaviours.** The plugin does not rewrite the author's
+frontmatter to make a skill load (that is editing someone else's metadata), and
+it does not delete or refuse the install (the files are legitimately what the
+registry serves, and the user may want them). It reports, and leaves the
+decision to the person looking at the panel.
 
 ---
 
@@ -633,17 +711,17 @@ npm install --legacy-peer-deps @deepseek-ai/cordis-plugin-group@1.0.4
 Then the install and composition checks:
 
 ```bash
-cd /path/to/dsh-skill-market && npm run build
+cd /path/to/dsh-skillhub && npm run build
 
 DSH=/tmp/dsh-cli/node_modules/.bin/dsh
 $DSH plugin --profile web add "file:$PWD"
 # remove first if re-running — reconcile only registers newly added deps:
-#   $DSH plugin --profile web remove dsh-skill-market
+#   $DSH plugin --profile web remove dsh-skillhub
 
 $DSH --profile web --dump-config | tail -3
-#   # == dsh-skill-market
-#   - id: skill-market
-#   name: dsh-skill-market
+#   # == dsh-skillhub
+#   - id: skill-hub
+#   name: dsh-skillhub
 ```
 
 Use the `file:` prefix. A bare path makes pnpm choose `link:`, and pnpm `12.5.1`

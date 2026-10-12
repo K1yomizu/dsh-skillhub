@@ -20,7 +20,7 @@ import type {
 import type { SkillDetail } from '../shared/skillhub.ts'
 
 /** Route prefix, mirroring the Host half. */
-export const API_BASE = '/plugins/dsh-skill-market/api'
+export const API_BASE = '/plugins/dsh-skillhub/api'
 
 /** Fired when a request cannot reach the Host route at all. */
 export class MarketTransportError extends Error {
@@ -56,7 +56,7 @@ async function post<T>(path: string, body: Record<string, unknown>): Promise<Api
   try {
     return (await response.json()) as ApiResponse<T>
   } catch {
-    throw new MarketTransportError('malformed response from the skill-market route')
+    throw new MarketTransportError('malformed response from the skill-hub route')
   }
 }
 

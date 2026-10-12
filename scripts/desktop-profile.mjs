@@ -22,7 +22,7 @@
  * profile's bundles against the installation, not against this checkout.
  *
  *   DSH_INSTALL=... node scripts/desktop-profile.mjs add "file:/abs/path/to/plugin"
- *   DSH_INSTALL=... node scripts/desktop-profile.mjs remove dsh-skill-market
+ *   DSH_INSTALL=... node scripts/desktop-profile.mjs remove dsh-skillhub
  *   DSH_INSTALL=... node scripts/desktop-profile.mjs install
  *
  * Quit DeepSeek Harness Desktop first: the installer takes a lock on the profile's

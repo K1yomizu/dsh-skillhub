@@ -166,7 +166,16 @@ export function parseFrontmatter(text: string): SkillFrontmatter {
   return front
 }
 
-function unquote(value: string): string {
+/**
+ * Strip a single pair of matching surrounding quotes from a frontmatter scalar.
+ *
+ * Exported so the read-back validator in `./contract.ts` unquotes exactly the
+ * way this parser does — two readers that disagree about what a value *is*
+ * would make the two halves of the plugin contradict each other.
+ * @param value - raw scalar text.
+ * @returns the unquoted, trimmed scalar.
+ */
+export function unquote(value: string): string {
   const trimmed = value.trim()
   if (trimmed.length >= 2) {
     const first = trimmed[0]

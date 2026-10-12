@@ -43,7 +43,7 @@ import {
 import { installFromMarket, loadCategories, searchMarket } from './market.ts'
 
 /** Route prefix serving the panel. */
-export const API_PREFIX = '/plugins/dsh-skill-market/api'
+export const API_PREFIX = '/plugins/dsh-skillhub/api'
 
 /** Largest request body accepted, in bytes. */
 const MAX_BODY_BYTES = 64 * 1024

@@ -1,5 +1,5 @@
 {
-  "name": "dsh-skill-market",
+  "name": "dsh-skillhub",
   "version": "0.1.0",
   "description": "DeepSeek Harness plugin: a Skill Market panel in the Web UI sidebar — search/browse SkillHub skills with automatic source fallback, install/uninstall into user-level or project-level skill directories, manage installed skills (filter, enable/disable, delete, promote project to user), and a dsh_skillhub_search model tool.",
   "keywords": [
@@ -47,11 +47,13 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
+    "test": "node scripts/test-contract.mjs",
+    "test:readback": "node scripts/test-install-readback.mjs",
     "smoke": "node scripts/smoke-host.mjs",
     "capture": "node scripts/capture-ui.mjs",
     "audit": "node scripts/audit-compat.mjs",
-    "verify": "npm run typecheck && npm run build",
-    "verify:live": "npm run verify && npm run smoke"
+    "verify": "npm run typecheck && npm run test && npm run build",
+    "verify:live": "npm run verify && npm run test:readback && npm run smoke"
   },
   "engines": {
     "node": "^22.19.0 || >=24.0.0"

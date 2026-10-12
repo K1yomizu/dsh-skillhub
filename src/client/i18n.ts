@@ -61,9 +61,16 @@ export type CopyKey =
   | 'detail.back'
   | 'detail.noReadme'
   | 'notice.installed'
+  | 'notice.installedWarn'
   | 'notice.removed'
   | 'notice.promoted'
   | 'notice.updated'
+  | 'warn.missing-frontmatter'
+  | 'warn.missing-name-or-description'
+  | 'warn.invalid-name'
+  | 'warn.legacy-invocation-key'
+  | 'warn.invalid-invocation-boolean'
+  | 'warn.unreadable'
   | 'busy.working'
 
 /** Chinese dictionary (default). */
@@ -117,9 +124,16 @@ const ZH: Record<CopyKey, string> = {
   'detail.back': '返回列表',
   'detail.noReadme': '该技能未提供概述内容。',
   'notice.installed': '已安装「{name}」（{level}级，{count} 个文件）',
+  'notice.installedWarn': '已安装「{name}」，但 DSH 会忽略它：{reason}',
   'notice.removed': '已删除「{name}」',
   'notice.promoted': '已把「{name}」升级为用户级',
   'notice.updated': '已更新「{name}」的调用开关',
+  'warn.missing-frontmatter': '「SKILL.md」没有 YAML frontmatter 块',
+  'warn.missing-name-or-description': 'frontmatter 必须同时提供 name 和 description',
+  'warn.invalid-name': 'name「{detail}」不符合 DSH 语法（只允许小写字母、数字、连字符）',
+  'warn.legacy-invocation-key': '字段「{detail}」DSH 不接受，应改用「{hint}」',
+  'warn.invalid-invocation-boolean': '调用开关「{detail}」的值不是布尔值',
+  'warn.unreadable': '无法回读刚写入的文件：{detail}',
   'busy.working': '处理中…',
 }
 
@@ -174,9 +188,16 @@ const EN: Record<CopyKey, string> = {
   'detail.back': 'Back to list',
   'detail.noReadme': 'No overview content was provided for this skill.',
   'notice.installed': 'Installed "{name}" at {level} level ({count} files)',
+  'notice.installedWarn': 'Installed "{name}", but DSH will ignore it: {reason}',
   'notice.removed': 'Removed "{name}"',
   'notice.promoted': 'Promoted "{name}" to user level',
   'notice.updated': 'Updated invocation switches for "{name}"',
+  'warn.missing-frontmatter': 'SKILL.md has no YAML frontmatter block',
+  'warn.missing-name-or-description': 'frontmatter requires both name and description',
+  'warn.invalid-name': 'name "{detail}" does not match DSH grammar (lowercase letters, digits, hyphens)',
+  'warn.legacy-invocation-key': 'DSH rejects the field "{detail}"; use "{hint}" instead',
+  'warn.invalid-invocation-boolean': 'invocation switch "{detail}" does not carry a boolean value',
+  'warn.unreadable': 'could not read the installed skill back: {detail}',
   'busy.working': 'Working…',
 }
 
