@@ -15,6 +15,16 @@ lists under *Installed* are the real files in DSH's four skill roots, several of
 which it cannot write to. The comparison is spelled out in
 [DEVNOTES §5](./DEVNOTES.md#5-design-decisions-worth-stating).
 
+> **Read [docs/landscape.md](./docs/landscape.md) before judging whether this
+> should exist.** A survey of the ecosystem on 2026-10-12 found **21 repositories
+> in this exact category** and **199 marketplace-shaped DSH projects** overall,
+> against a 6 229-star incumbent in the general case — and, more pointedly, that
+> **SkillHub's own vendor ships a DSH plugin**, `@tencent/skillhub` inside
+> [`Tencent/skillhub`](https://github.com/Tencent/skillhub), which covers the whole
+> original brief and more, including this plugin's sidebar slot. This is one entry
+> in a crowded field with a handful of things it does more carefully (§4 of that
+> document); it is not a gap being filled.
+
 > **On the name.** The package is `dsh-skillhub`, after the registry it talks to.
 > The panel it renders is still labelled *Skill Market* / 技能市场, because that
 > is what the surface *is* — a marketplace UI. Package identity and product label

@@ -390,9 +390,38 @@ the two paths share a goal and share nothing else:
 
 The overlap is real and worth naming: DSH can already install skills without this
 plugin. What is new is the *surface* — a browsable registry that is not GitHub, a
-one-click path into DSH's own roots, and management of what landed there. If a
-future DSH release grows a market of its own, this plugin becomes the SkillHub
-connector for it rather than a duplicate of it.
+one-click path into DSH's own roots, and management of what landed there.
+
+**A survey on 2026-10-12 corrected the assumption behind that paragraph.**
+[`docs/landscape.md`](./docs/landscape.md) searched GitHub through 11 queries and
+merged the results: **376 DSH-related repositories, 199 of them marketplace-shaped,
+178 of those plugin markets, and 21 in this exact skill-market category** — against
+a 6 229-star incumbent in the general case. Three of the 21 are near-identical in
+shape *and* name; `peiqi10086/dsh-skills-market` even ships the same model tool
+name, `dsh_skillhub_search`. This is not an empty slot.
+
+Two findings from that survey matter more than the counts:
+
+1. **The registry's own vendor ships a DSH plugin.** `Tencent/skillhub` (35★)
+   contains `dsh-plugin/` — `@tencent/skillhub` v0.2.16, MIT — whose README
+   describes conversation-stream cards, detail pages with AI scores and TRACE
+   evaluation, zip install/uninstall, *a plugin plaza in the sidebar footer* (this
+   plugin's slot), in-conversation plugin search with one-click install, meta cards,
+   self-update to the latest release, and a bilingual UI. That is a superset of the
+   brief this plugin was built from. Worth recording: the documented npm install
+   path returned **404** when checked, so the GitHub source path is the one that is
+   certainly live.
+2. **The original package name was already taken on npm.** `dsh-skill-market`
+   resolves to a published v1.0.0 (2026-09-10) described as *"聚合 SkillHub +
+   ClawHub 双源搜索技能"* — someone else's implementation of the same idea, under
+   the name this plugin used before the rename. `dsh-skillhub` is free. Publishing
+   under the old name would have failed.
+
+The honest framing after that survey is **connector, not product**: with the
+vendor's own plugin in the field, the durable role for this code is the skill-source
+layer — the read-back validation of §6.7, the reported fallback chain, per-file
+hash verification, zero-dependency host — rather than a 179th market competing for
+attention. That is a smaller claim than the original brief, and a truer one.
 
 **The registry is SkillHub's, not ours.** The panel is a view over
 `api.skillhub.cn`, the same marketplace this machine's WorkBuddy environment
