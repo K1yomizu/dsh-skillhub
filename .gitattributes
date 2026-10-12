@@ -1,0 +1,6 @@
+# The project is authored with LF; keep it that way on every platform so the
+# built lib/ artifacts do not churn between checkouts.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary

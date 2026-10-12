@@ -1,0 +1,11 @@
+# dsh-skill-market — bundle composition layer.
+#
+# Inserts this package's HOST row into the profile composition. The browser half
+# is NOT mounted from here: it is discovered through package.json's `dsh.client`
+# declaration plus the `exports["./client"]` entry point.
+#
+# The row `name` is the package name (not a source-relative path) so that Node
+# module resolution from the profile directory finds the installed code.
+- insert:
+    - id: skill-market
+      name: dsh-skill-market

@@ -1,0 +1,599 @@
+{
+  "host": "https://api.skillhub.cn",
+  "sortBy": "downloads",
+  "sampledAt": "2026-10-12T07:18:42.683Z",
+  "rows": [
+    {
+      "slug": "dev-expert",
+      "namespace": "indiv-ebandao",
+      "downloads": 2737885,
+      "displayName": "编程专家.Skill",
+      "ok": true,
+      "reason": "",
+      "version": "2.1.0",
+      "name": "dev-expert",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "author",
+        "license",
+        "allowed-tools"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "dev-expert",
+      "namespace": "user_814dbe54",
+      "downloads": 2044141,
+      "displayName": "dev-expert",
+      "ok": true,
+      "reason": "",
+      "version": "1.17.0",
+      "name": "dev-expert",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "author",
+        "license",
+        "allowed-tools",
+        "slug",
+        "displayName"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "parenting-expert",
+      "namespace": "indiv-ebandao",
+      "downloads": 2036295,
+      "displayName": "育儿大师.Skill",
+      "ok": true,
+      "reason": "",
+      "version": "1.11.4",
+      "name": "parenting-expert",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "author",
+        "license",
+        "allowed-tools"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "tencent-docs",
+      "namespace": "tencent-adm",
+      "downloads": 1643994,
+      "displayName": "腾讯文档 TENCENT DOCS",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.41",
+      "name": "tencent-docs",
+      "keys": [
+        "name",
+        "description",
+        "homepage",
+        "version",
+        "author",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "self-improving-agent",
+      "namespace": "clawhub_pskoett",
+      "downloads": 1372642,
+      "displayName": "self-improving agent",
+      "ok": true,
+      "reason": "",
+      "version": "3.0.24",
+      "name": "self-improvement",
+      "keys": [
+        "name",
+        "description",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "find-skills",
+      "namespace": "clawhub_root",
+      "downloads": 1224399,
+      "displayName": "Find Skills",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "find-skills",
+      "keys": [
+        "name",
+        "slug",
+        "displayName",
+        "version",
+        "description",
+        "agent_created",
+        "xiaping_trigger",
+        "xiaping_category",
+        "xiaping_tags",
+        "xiaping_eval_strategy"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "anti-fraud",
+      "namespace": "indiv-ebandao",
+      "downloads": 1027977,
+      "displayName": "防骗大师.Skill",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.11",
+      "name": "anti-fraud",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "author"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "agent-browser",
+      "namespace": "clawhub_rez0",
+      "downloads": 996437,
+      "displayName": "Agent Browser",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "agent-browser",
+      "keys": [
+        "name",
+        "description",
+        "allowed-tools",
+        "hidden"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "multi-search-engine",
+      "namespace": "zcwl",
+      "downloads": 985751,
+      "displayName": "搜索引擎",
+      "ok": true,
+      "reason": "",
+      "version": "2.1.5",
+      "name": "multi-search-engine",
+      "keys": [
+        "slug",
+        "name",
+        "version",
+        "displayName",
+        "summary",
+        "summary_zh",
+        "license",
+        "description",
+        "tags",
+        "tools",
+        "homepage",
+        "category",
+        "homepage",
+        "pricing_tier"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "libai",
+      "namespace": "indiv-ebandao",
+      "downloads": 783634,
+      "displayName": "李白.Skill",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.5",
+      "name": "libai-skill",
+      "keys": [
+        "name",
+        "description",
+        "author",
+        "version",
+        "license",
+        "allowed-tools",
+        "triggers"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "anti-fraud",
+      "namespace": "user_814dbe54",
+      "downloads": 748091,
+      "displayName": "anti-fraud",
+      "ok": true,
+      "reason": "",
+      "version": "2.0.12",
+      "name": "anti-fraud",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "author",
+        "slug",
+        "displayName"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "summarize",
+      "namespace": "clawhub_paudyyin",
+      "downloads": 711561,
+      "displayName": "Summarize",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "summarize",
+      "keys": [
+        "name",
+        "version",
+        "description",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "anti-fraud",
+      "namespace": "indiv-skill",
+      "downloads": 704966,
+      "displayName": "防诈专家",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "anti-fraud",
+      "keys": [
+        "name",
+        "description",
+        "agent_created"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "beatra",
+      "namespace": "beatra-ai",
+      "downloads": 657198,
+      "displayName": "视频短视频图片音乐音频配音口播数字人全能创作",
+      "ok": true,
+      "reason": "",
+      "version": "2.9.1",
+      "name": "beatra",
+      "keys": [
+        "name",
+        "description"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "mysteel-datasearch",
+      "namespace": "mysteel",
+      "downloads": 654939,
+      "displayName": "钢联AI - 智能问数",
+      "ok": false,
+      "reason": "bad name \"Mysteel_PriceSearch\"",
+      "version": "1.0.2",
+      "name": "Mysteel_PriceSearch",
+      "keys": [
+        "name",
+        "description",
+        "dependency"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "cic",
+      "namespace": "cic",
+      "downloads": 630556,
+      "displayName": "全国电子印章互认平台",
+      "ok": false,
+      "reason": "bad name \"全国电子印章互认平台\"",
+      "version": "1.0.10",
+      "name": "全国电子印章互认平台",
+      "keys": [
+        "name",
+        "version",
+        "description",
+        "license",
+        "user-invocable",
+        "permissions",
+        "dependencies",
+        "config",
+        "tools",
+        "execution"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "libai",
+      "namespace": "user_814dbe54",
+      "downloads": 588511,
+      "displayName": "libai-skill",
+      "ok": true,
+      "reason": "",
+      "version": "2.0.0",
+      "name": "libai-skill",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "author",
+        "triggers",
+        "slug",
+        "displayName"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "dev-god",
+      "namespace": "ake",
+      "downloads": 573125,
+      "displayName": "编程大神.skill",
+      "ok": true,
+      "reason": "",
+      "version": "1.2.3",
+      "name": "dev-god",
+      "keys": [
+        "name",
+        "description",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "baozheng",
+      "namespace": "indiv-ebandao",
+      "downloads": 573107,
+      "displayName": "包拯.SKILL",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.3",
+      "name": "baozheng-skills",
+      "keys": [
+        "name",
+        "description",
+        "version",
+        "license",
+        "allowed-tools"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "ima-skills",
+      "namespace": "tencent-adm",
+      "downloads": 536931,
+      "displayName": "ima-skills",
+      "ok": true,
+      "reason": "",
+      "version": "1.1.9",
+      "name": "ima-skill",
+      "keys": [
+        "name",
+        "description",
+        "homepage",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "unclecheng-reduce-ai-perception-v2",
+      "namespace": "user_ab5ae6ee",
+      "downloads": 532315,
+      "displayName": "文章去AI味工具",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.5",
+      "name": "humanizer",
+      "keys": [
+        "name",
+        "description",
+        "description_zh",
+        "description_en",
+        "version",
+        "allowed-tools",
+        "trigger"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "parenting-expert",
+      "namespace": "user_c0c05774",
+      "downloads": 503845,
+      "displayName": "育儿专家",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "parenting-expert",
+      "keys": [
+        "name",
+        "description",
+        "agent_created"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "cnfinancialscraper",
+      "namespace": "user_9d5a2a39",
+      "downloads": 500358,
+      "displayName": "全能金融爬虫（新增MCP接入）",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.49",
+      "name": "cn-financial-scraper",
+      "keys": [
+        "name",
+        "display_name",
+        "display_name_en",
+        "description_zh",
+        "description_en",
+        "version",
+        "description",
+        "auto_trigger"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "self-improving",
+      "namespace": "clawhub_ivangdavila",
+      "downloads": 498369,
+      "displayName": "Self-Improving + Proactive Agent",
+      "ok": false,
+      "reason": "bad name \"Self-Improving + Proactive Agent\"",
+      "version": "1.2.16",
+      "name": "Self-Improving + Proactive Agent",
+      "keys": [
+        "name",
+        "slug",
+        "version",
+        "homepage",
+        "description",
+        "changelog",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "smart-charts",
+      "namespace": "user_5b28ea14",
+      "downloads": 436766,
+      "displayName": "smart-charts",
+      "ok": true,
+      "reason": "",
+      "version": "8.4.0",
+      "name": "smart-charts",
+      "keys": [
+        "name",
+        "version",
+        "display_name",
+        "display_name_en",
+        "description",
+        "description_en",
+        "license",
+        "compatibility",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "admapix",
+      "namespace": "clawhub_fly0pants",
+      "downloads": 422910,
+      "displayName": "AdMapix",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.30",
+      "name": "admapix",
+      "keys": [
+        "name",
+        "description",
+        "metadata"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "github",
+      "namespace": "clawhub_steipete",
+      "downloads": 408936,
+      "displayName": "Github",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "github",
+      "keys": [
+        "name",
+        "description"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "wps-office-suite",
+      "namespace": "user_1a470ba8",
+      "downloads": 381848,
+      "displayName": "WPS Office 全家桶",
+      "ok": true,
+      "reason": "",
+      "version": "5.3.0",
+      "name": "wps-office-suite",
+      "keys": [
+        "name",
+        "displayName",
+        "slug",
+        "description",
+        "version",
+        "category",
+        "platforms",
+        "permission",
+        "dependency",
+        "pricing",
+        "tags"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "humanizer",
+      "namespace": "clawhub_biostartechnology",
+      "downloads": 369974,
+      "displayName": "Humanizer",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "humanizer",
+      "keys": [
+        "name",
+        "version",
+        "description",
+        "allowed-tools"
+      ],
+      "missing": "",
+      "legacy": ""
+    },
+    {
+      "slug": "skill-vetter",
+      "namespace": "clawhub_spclaudehome",
+      "downloads": 358240,
+      "displayName": "Skill Vetter",
+      "ok": true,
+      "reason": "",
+      "version": "1.0.0",
+      "name": "skill-vetter",
+      "keys": [
+        "name",
+        "version",
+        "description"
+      ],
+      "missing": "",
+      "legacy": ""
+    }
+  ]
+}
